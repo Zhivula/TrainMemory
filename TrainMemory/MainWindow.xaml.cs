@@ -23,6 +23,7 @@ namespace TrainMemory
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = new MainWindowViewModel();
         }
     }
 }

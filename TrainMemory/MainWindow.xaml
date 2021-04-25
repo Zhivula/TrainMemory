@@ -4,9 +4,53 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TrainMemory"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="500" Width="900">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="70"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="50"/>
+        </Grid.RowDefinitions>
+        <Grid>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                <Button HorizontalAlignment="Left" VerticalAlignment="Center" Content="Показать" Command="{Binding ShowCards}" IsEnabled="{Binding IsEnabledShowCards}" Margin="10"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Label VerticalAlignment="Center" Content="{Binding Time}" Foreground="Gray" FontSize="35" FontWeight="DemiBold"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button HorizontalAlignment="Right" VerticalAlignment="Center" Content="Проверить" Command="{Binding Check}"/>
+                <Button HorizontalAlignment="Right" VerticalAlignment="Center" Content="Настройки" Command="{Binding Settings}" Margin="20 0 10 0"/>
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Row="1">
+            <ScrollViewer>
+                <ListBox ItemsSource="{Binding R, UpdateSourceTrigger=PropertyChanged}" IsEnabled="False">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Width="150" Height="150">
+                                <Border CornerRadius="7" BorderBrush="Gray" BorderThickness="3"  Background="{Binding Path=Background}">
+                                    <Border.Effect>
+                                        <DropShadowEffect ShadowDepth="0" Direction="90" Color="Black" Opacity="0.75"  BlurRadius="10.0" />
+                                    </Border.Effect>
+                                </Border>
+                                <TextBlock Text="{Binding Path=Text}" Foreground="Black" FontSize="55" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </ScrollViewer>
+        </Grid>
+        <Grid Grid.Row="2">
+            <Border BorderBrush="CadetBlue" BorderThickness="0 3 0 0"/>
+            <TextBox Text="{Binding InputText, UpdateSourceTrigger=PropertyChanged}" FontSize="20" Margin="10" TextWrapping="Wrap" IsEnabled="{Binding IsEnabledTextBox}"/>
+        </Grid>
     </Grid>
 </Window>
