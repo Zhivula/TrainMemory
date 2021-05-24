@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace TrainMemory.Model
 {
-    class SettingsModel
+    class CardRevers
     {
-        
     }
 }

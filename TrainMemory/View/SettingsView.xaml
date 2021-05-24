@@ -3,10 +3,80 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:local="clr-namespace:TrainMemory.View"
         mc:Ignorable="d"
-        Title="SettingsView" Height="450" Width="800">
+        Title="SettingsView" Height="200" Width="200" ResizeMode="NoResize" WindowStyle="None" AllowsTransparency="True" Background="{x:Null}">
+    <Window.Resources>
+        <Style TargetType="Label">
+            <Setter Property="Foreground" Value="Gray"/>
+            <Setter Property="FontSize" Value="12"/>
+        </Style>
+        <Style x:Key="GridKey" >
+            <Setter Property="Grid.Margin" Value="0 2 0 2"/>
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="Foreground" Value="Gray"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Width" Value="55"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="Margin" Value="0 0 10 0"/>
+        </Style>
+    </Window.Resources>
     <Grid>
-        
+        <Border CornerRadius="10" Background="White"/>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0" MouseDown="Grid_MouseDown" Background="Transparent">
+                <Border BorderBrush="Gray" BorderThickness="0 0 0 1"/>
+                <Button HorizontalAlignment="Right" Background="{x:Null}" BorderBrush="{x:Null}" Command="{Binding CloseWindow}">
+                    <materialDesign:PackIcon Kind="CloseBox" Foreground="Gray" Height="25" Width="25"/>
+                </Button>
+            </Grid>
+            <Grid Grid.Row="1" Margin="0 20 0 0">
+                <StackPanel>
+                    <Grid Style="{StaticResource GridKey}">
+                        <Label Content="Начальное значение:"/>
+                        <TextBox Text="{Binding Start}">
+                            <TextBox.Template>
+                                <ControlTemplate>
+                                    <Border CornerRadius="5" BorderThickness="1" BorderBrush="#FF468AFF" Background="White">
+                                        <ScrollViewer Margin="0" x:Name="PART_ContentHost" />
+                                    </Border>
+                                </ControlTemplate>
+                            </TextBox.Template>
+                        </TextBox>
+                    </Grid>
+                    <Grid Style="{StaticResource GridKey}">
+                        <Label Content="Конечное значение:"/>
+                        <TextBox Text="{Binding Finish}">
+                            <TextBox.Template>
+                                <ControlTemplate>
+                                    <Border CornerRadius="5" BorderThickness="1" BorderBrush="#FF468AFF" Background="White">
+                                        <ScrollViewer Margin="0" x:Name="PART_ContentHost" />
+                                    </Border>
+                                </ControlTemplate>
+                            </TextBox.Template>
+                        </TextBox>
+                    </Grid>
+                    <Grid Style="{StaticResource GridKey}">
+                        <Label Content="Количество чисел:"/>
+                        <TextBox Text="{Binding Count}">
+                            <TextBox.Template>
+                                <ControlTemplate>
+                                    <Border CornerRadius="5" BorderThickness="1" BorderBrush="#FF468AFF" Background="White">
+                                        <ScrollViewer Margin="0" x:Name="PART_ContentHost" />
+                                    </Border>
+                                </ControlTemplate>
+                            </TextBox.Template>
+                        </TextBox>
+                    </Grid>
+                    <Button Content="Сохранить" Margin="20 10" Command="{Binding Save}"></Button>
+                </StackPanel>
+            </Grid>
+        </Grid>
     </Grid>
 </Window>

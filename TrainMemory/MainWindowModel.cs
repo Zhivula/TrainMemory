@@ -6,18 +6,23 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using TrainMemory.Properties;
 
 namespace TrainMemory
 {
     class MainWindowModel: INotifyPropertyChanged
     {
-        private int count = 10;
-        private int finish = 100;
-        private int start = 1;
+        private int count;
+        private int finish;
+        private int start;
         private bool isChecked = true;
 
         public List<int> GetList()
         {
+            count = int.Parse(Settings.Default["Count"].ToString());               
+            start = int.Parse(Settings.Default["Start"].ToString());
+            finish = int.Parse(Settings.Default["Finish"].ToString());
+
             Random rand = new Random();
             var list = new List<int>(count);
             finish++;//finish+1 - это чтобы было включительное значение, по умолчанию не включительно 
@@ -51,7 +56,6 @@ namespace TrainMemory
             finish = start;
             start = box;
         }
-
         #region PropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string name)

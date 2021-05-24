@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TrainMemory.Model
+namespace TrainMemory.ViewModel
 {
-    class SettingsModel
+    class CardReversViewModel
     {
-        
     }
 }

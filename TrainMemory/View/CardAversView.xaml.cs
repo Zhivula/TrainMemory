@@ -10,25 +10,21 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 using TrainMemory.ViewModel;
 
 namespace TrainMemory.View
 {
     /// <summary>
-    /// Логика взаимодействия для SettingsView.xaml
+    /// Логика взаимодействия для CardView.xaml
     /// </summary>
-    public partial class SettingsView : Window
+    public partial class CardView : UserControl
     {
-        public SettingsView()
+        public CardView()
         {
             InitializeComponent();
-            DataContext = new SettingsViewModel();
-        }
-
-        private void Grid_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            DragMove();
+            DataContext = new CardAversViewModel();
         }
     }
 }

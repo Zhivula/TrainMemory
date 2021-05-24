@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MaterialDesignThemes.Wpf;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -7,33 +8,26 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
+using TrainMemory.Model;
+using TrainMemory.View;
+using Card = TrainMemory.Model.Card;
 
 namespace TrainMemory
 {
     class MainWindowViewModel : INotifyPropertyChanged
     {
-        private List<int> result;
-        private ObservableCollection<TextBox> r;
+        private ObservableCollection<Card> result;
         private string inputText;
         private bool isEnabledTextBox;
         private bool isEnabledShowCards;
+        private List<int> numbers;
 
 
         private string time;
         private DateTime start;
         private DispatcherTimer timer;
         private TimeSpan deltaTime;
-        private List<int> input;
 
-        public List<int> Result
-        {
-            get => result;
-            set
-            {
-                result = value;
-                OnPropertyChanged(nameof(Result));
-            }
-        }
         public bool IsEnabledTextBox
         {
             get => isEnabledTextBox;
@@ -61,13 +55,13 @@ namespace TrainMemory
                 OnPropertyChanged(nameof(InputText));
             }
         }
-        public ObservableCollection<TextBox> R
+        public ObservableCollection<Card> Result
         {
-            get => r;
+            get => result;
             set
             {
-                r = value;
-                OnPropertyChanged(nameof(R));
+                result = value;
+                OnPropertyChanged(nameof(Result));
             }
         }
         public string Time
@@ -79,7 +73,6 @@ namespace TrainMemory
                 OnPropertyChanged(nameof(Time));
             }
         }
-
         public MainWindowViewModel()
         {
             InputText = string.Empty;
@@ -91,49 +84,57 @@ namespace TrainMemory
         {
             IsEnabledShowCards = false;
             start = DateTime.Now;
-            Result = new MainWindowModel().GetList();
-            R = new ObservableCollection<TextBox>();
+            numbers = new MainWindowModel().GetList();
+            Result = new ObservableCollection<Card>();
             IsEnabledTextBox = false;
             InputText = string.Empty;
-            for (int i = 0; i < Result.Count; i++)
+            for (int i = 0; i < numbers.Count; i++)
             {
-                R.Add(new TextBox() { Text = Result[i].ToString(), Background = new SolidColorBrush(Colors.Red) });
+                Result.Add(new Card() { Text = numbers[i].ToString(), Background = new SolidColorBrush(Colors.Red), IsEnabled=true, Symbol = PackIconKind.Eye });
             }
             timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromMilliseconds(10);
             timer.Tick += showTime;
             timer.Start();       
         });
-
+        public ICommand Settings => new DelegateCommand(o =>
+        {
+            var windowSettings = new SettingsView();
+            windowSettings.Show();
+        });
+        public ICommand IconButton => new DelegateCommand(o =>
+        {
+            
+        });
         public ICommand Check => new DelegateCommand(o =>
         {
             IsEnabledTextBox = false;
             IsEnabledShowCards = true;
-            input = new List<int>();
+            var input = new List<int>();
             if (InputText.All(c => char.IsDigit(c) || c == ' '))
             {
                 input = InputText.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList();
             } 
             while (input.Count < Result.Count) input.Add(0);
-            R.Clear();
+            Result.Clear();
             for(int i=0; i < input.Count; i++)
             {
-                if(input[i] == Result[i]) R.Add(new TextBox() { Text = Result[i].ToString(), Background = new SolidColorBrush(Colors.Green) });
-                else R.Add(new TextBox() { Text = Result[i].ToString(), Background = new SolidColorBrush(Colors.Red) });
+                if(input[i] == numbers[i]) Result.Add(new Card() { Text = numbers[i].ToString(), Background = new SolidColorBrush(Colors.Green), IsEnabled = true, Symbol = PackIconKind.Eye });
+                else Result.Add(new Card() { Text = numbers[i].ToString(), Background = new SolidColorBrush(Colors.Red), IsEnabled = true, Symbol = PackIconKind.Eye });
             }
         });
 
+        //Срабатывает после того, как таймер отсчитает время
         private void showTime(object obj, EventArgs e)
         {
             if (DateTime.Now - start >= new TimeSpan(0, 0, 0, 10))
             {
                 timer.Stop();
                 IsEnabledTextBox = true;
-                //Result = Enumerable.Repeat(0,10).ToList();
-                R.Clear();
-                for (int i = 0; i < 10; i++)
+                Result.Clear();
+                for (int i = 0; i < numbers.Count; i++)
                 {
-                    R.Add(new TextBox() { Text = "", IsEnabled = true });
+                    Result.Add(new Card());
                 }
             }
             deltaTime = DateTime.Now - start;
