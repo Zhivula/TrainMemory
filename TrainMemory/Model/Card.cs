@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace TrainMemory.Model
@@ -15,7 +16,8 @@ namespace TrainMemory.Model
         private int number;
         private SolidColorBrush background;
         private bool isEnabled;
-        private PackIconKind symbol;
+        private string imageSource;
+        private Grid content;
 
         public string Text
         {
@@ -26,13 +28,22 @@ namespace TrainMemory.Model
                 OnPropertyChanged(nameof(Text));
             }
         }
-        public PackIconKind Symbol
+        public Grid Content
         {
-            get => symbol;
+            get => content;
             set
             {
-                symbol = value;
-                OnPropertyChanged(nameof(Symbol));
+                content = value;
+                OnPropertyChanged(nameof(Content));
+            }
+        }
+        public string ImageS
+        {
+            get => imageSource;
+            set
+            {
+                imageSource = value;
+                OnPropertyChanged(nameof(ImageS));
             }
         }
         public int Number
