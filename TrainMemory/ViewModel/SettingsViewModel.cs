@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using TrainMemory.Properties;
@@ -16,6 +12,8 @@ namespace TrainMemory.ViewModel
         private int count;
         private int start;
         private int finish;
+        private int seconds;
+        private bool isChecked;
 
         public int Count
         {
@@ -44,11 +42,47 @@ namespace TrainMemory.ViewModel
                 OnPropertyChanged(nameof(Finish));
             }
         }
+        public int Seconds
+        {
+            get => seconds;
+            set
+            {
+                seconds = value;
+                OnPropertyChanged(nameof(Seconds));
+            }
+        }
+        public bool IsChecked
+        {
+            get => isChecked;
+            set
+            {
+                isChecked = value;
+                OnPropertyChanged(nameof(IsChecked));
+            }
+        }
+        public SettingsViewModel()
+        {
+            Count = int.Parse(Settings.Default["Count"].ToString());
+            Start = int.Parse(Settings.Default["Start"].ToString());
+            Finish = int.Parse(Settings.Default["Finish"].ToString());
+            Seconds = int.Parse(Settings.Default["Seconds"].ToString());
+            IsChecked = bool.Parse(Settings.Default["IsChecked"].ToString());
+        }
         public ICommand Save => new DelegateCommand(o =>
         {
-            Settings.Default["Count"] = Count;
-            Settings.Default["Start"] = Start;
-            Settings.Default["Finish"] = Finish;
+            if (Count > 0) Settings.Default["Count"] = Count;
+            else MessageBox.Show("Количество элементов должно быть больше нуля.");
+
+            if(Start >= 0 && Start < 100) Settings.Default["Start"] = Start;
+            else MessageBox.Show("Допускается ввод только положительных чисел до 100.");
+
+            if (Finish > 0 && Finish < 100) Settings.Default["Finish"] = Finish;//последный крайний элемент не может быть равен нулю
+            else MessageBox.Show("Допускается ввод только положительных чисел до 100.");
+
+            if (Seconds > 0) Settings.Default["Seconds"] = Seconds;
+            else MessageBox.Show("Допускается ввод только положительных чисел.");
+
+            Settings.Default["IsChecked"] = IsChecked;
 
             Settings.Default.Save();
             ShowNotification();

@@ -6,7 +6,7 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:local="clr-namespace:TrainMemory.View"
         mc:Ignorable="d"
-        Title="SettingsView" Height="200" Width="200" ResizeMode="NoResize" WindowStyle="None" AllowsTransparency="True" Background="{x:Null}">
+        Title="SettingsView" Height="260" Width="200" ResizeMode="NoResize" WindowStyle="None" AllowsTransparency="True" Background="{x:Null}">
     <Window.Resources>
         <Style TargetType="Label">
             <Setter Property="Foreground" Value="Gray"/>
@@ -73,6 +73,22 @@
                                 </ControlTemplate>
                             </TextBox.Template>
                         </TextBox>
+                    </Grid>
+                    <Grid Style="{StaticResource GridKey}">
+                        <Label Content="Выдержка времени (с.):"/>
+                        <TextBox Text="{Binding Seconds}" IsEnabled="{Binding ElementName=CheckBox, Path=IsChecked}">
+                            <TextBox.Template>
+                                <ControlTemplate>
+                                    <Border CornerRadius="5" BorderThickness="1" BorderBrush="#FF468AFF" Background="White">
+                                        <ScrollViewer Margin="0" x:Name="PART_ContentHost" />
+                                    </Border>
+                                </ControlTemplate>
+                            </TextBox.Template>
+                        </TextBox>
+                    </Grid>
+                    <Grid Style="{StaticResource GridKey}">
+                        <Label Content="Наличие таймера:"/>
+                        <CheckBox x:Name="CheckBox" HorizontalAlignment="Right" Margin="0 0 28 0" IsChecked="{Binding IsChecked}"/>
                     </Grid>
                     <Button Content="Сохранить" Margin="20 10" Command="{Binding Save}"></Button>
                 </StackPanel>

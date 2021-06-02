@@ -16,15 +16,24 @@
         <Grid>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
                 <Button HorizontalAlignment="Left" VerticalAlignment="Center" Content="Показать" Command="{Binding ShowCards}" IsEnabled="{Binding IsEnabledShowCards}" Margin="10"/>
+                <Button HorizontalAlignment="Right" VerticalAlignment="Center" Command="{Binding CloseCards}" Margin="10 0 0 0">
+                    <materialDesign:PackIcon Kind="Close" Height="20" Width="20" HorizontalAlignment="Left" Foreground="White"/>
+                </Button>
+                <Button HorizontalAlignment="Right" VerticalAlignment="Center" Command="{Binding ShowPictures}" Margin="20 0 0 0">
+                    <materialDesign:PackIcon Kind="Eye" Height="15" Width="15" HorizontalAlignment="Left" Foreground="White"/>
+                </Button>
+                <Button HorizontalAlignment="Right" VerticalAlignment="Center" Command="{Binding ShowNumbers}" Margin="20 0 0 0">
+                    <materialDesign:PackIcon Kind="Numbers" Height="15" Width="15" HorizontalAlignment="Left" Foreground="White"/>
+                </Button>
             </StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <Label VerticalAlignment="Center" Content="{Binding Time}" Foreground="Gray" FontSize="35" FontWeight="DemiBold"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button HorizontalAlignment="Right" VerticalAlignment="Center" Command="{Binding ShowPictures}" Margin="0 0 20 0">
-                    <materialDesign:PackIcon Kind="Eye" Height="15" Width="15" HorizontalAlignment="Left" Foreground="White"/>
+                <Button HorizontalAlignment="Right" VerticalAlignment="Center" Command="{Binding ShowTable}" Margin="0 0 20 0">
+                    <materialDesign:PackIcon Kind="TableLarge" Height="15" Width="15" HorizontalAlignment="Left" Foreground="White"/>
                 </Button>
-                <Button HorizontalAlignment="Right" VerticalAlignment="Center" Content="Проверить" Command="{Binding Check}"/>
+                <Button HorizontalAlignment="Right" VerticalAlignment="Center" Content="Проверить" Command="{Binding Check}" IsEnabled="{Binding IsEnabledCheck}"/>
                 <Button HorizontalAlignment="Right" VerticalAlignment="Center" Content="Настройки" Command="{Binding Settings}" Margin="20 0 10 0"/>
             </StackPanel>
         </Grid>

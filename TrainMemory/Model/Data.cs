@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TrainMemory.Model
+﻿namespace TrainMemory.Model
 {
     public class Data
     {
@@ -12,12 +6,7 @@ namespace TrainMemory.Model
         public Data()
         {
              words = new string[] {
-
-
-
-
-
-                 "НоМерок",
+                "НоМерок",
                 "ёЖ",
                 "яД",
                 "уХо",

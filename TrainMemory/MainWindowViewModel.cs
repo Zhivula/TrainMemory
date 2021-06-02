@@ -1,5 +1,4 @@
-﻿using MaterialDesignThemes.Wpf;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -12,7 +11,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using TrainMemory.Model;
 using TrainMemory.View;
-using Card = TrainMemory.Model.Card;
+using TrainMemory.Properties;
+using Card = TrainMemory.Model.Card; 
 
 namespace TrainMemory
 {
@@ -22,6 +22,7 @@ namespace TrainMemory
         private string inputText;
         private bool isEnabledTextBox;
         private bool isEnabledShowCards;
+        private bool isEnabledCheck;
         private List<int> numbers;
 
 
@@ -29,6 +30,7 @@ namespace TrainMemory
         private DateTime start;
         private DispatcherTimer timer;
         private TimeSpan deltaTime;
+        private int seconds;
 
         public bool IsEnabledTextBox
         {
@@ -37,6 +39,15 @@ namespace TrainMemory
             {
                 isEnabledTextBox = value;
                 OnPropertyChanged(nameof(IsEnabledTextBox));
+            }
+        }
+        public bool IsEnabledCheck
+        {
+            get => isEnabledCheck;
+            set
+            {
+                isEnabledCheck = value;
+                OnPropertyChanged(nameof(IsEnabledCheck));
             }
         }
         public bool IsEnabledShowCards
@@ -75,55 +86,51 @@ namespace TrainMemory
                 OnPropertyChanged(nameof(Time));
             }
         }
+        
         public MainWindowViewModel()
         {
             InputText = string.Empty;
             IsEnabledTextBox = false;
+            IsEnabledCheck = false;
             IsEnabledShowCards = true;
         }
 
         public ICommand ShowCards => new DelegateCommand(o =>
         {
-            IsEnabledShowCards = false;
-            start = DateTime.Now;
             numbers = new MainWindowModel().GetList();
             Result = new ObservableCollection<Card>();
-            IsEnabledTextBox = false;
+            IsEnabledTextBox = true;
             InputText = string.Empty;
+            IsEnabledShowCards = true;
+            IsEnabledCheck = true;
+            Time = string.Empty;
 
-            for (int i = 0; i < numbers.Count; i++)
+            AddCards();
+
+            if (bool.Parse(Properties.Settings.Default["IsChecked"].ToString()))
             {
-                var grid = new Grid();
-                grid.Children.Add(new TextBlock() {
-                    Foreground = new SolidColorBrush(Colors.Black),
-                    FontSize = 65,
-                    HorizontalAlignment = HorizontalAlignment.Center,
-                    VerticalAlignment = VerticalAlignment.Center,
-                    Text = numbers[i].ToString()
-                });
-                Result.Add(new Card() {
-                    Background = new SolidColorBrush(Colors.White),
-                    Content = grid,
-                });
-            }
-            timer = new DispatcherTimer();
-            timer.Interval = TimeSpan.FromMilliseconds(10);
-            timer.Tick += showTime;
-            timer.Start();       
+                IsEnabledTextBox = false;
+                IsEnabledShowCards = false;
+                IsEnabledCheck = false;
+                start = DateTime.Now;
+                seconds = int.Parse(Properties.Settings.Default["Seconds"].ToString());
+
+                timer = new DispatcherTimer();
+                timer.Interval = TimeSpan.FromMilliseconds(10);
+                timer.Tick += showTime;
+                timer.Start();
+            }       
         });
         public ICommand Settings => new DelegateCommand(o =>
         {
             var windowSettings = new SettingsView();
             windowSettings.Show();
         });
-        public ICommand IconButton => new DelegateCommand(o =>
-        {
-            
-        });
         public ICommand Check => new DelegateCommand(o =>
         {
             IsEnabledTextBox = false;
             IsEnabledShowCards = true;
+            IsEnabledCheck = false;
             var input = new List<int>();
             if (InputText.All(c => char.IsDigit(c) || c == ' '))
             {
@@ -133,18 +140,93 @@ namespace TrainMemory
             Result.Clear();
             for(int i=0; i < input.Count; i++)
             {
-                if(input[i] == numbers[i]) Result.Add(new Card() { Text = numbers[i].ToString(), Background = new SolidColorBrush(Colors.Green)});
-                else Result.Add(new Card() { Text = numbers[i].ToString(), Background = new SolidColorBrush(Colors.Red)});
+                var grid = new Grid();
+                grid.Children.Add(new TextBlock()
+                {
+                    Foreground = new SolidColorBrush(Colors.Black),
+                    FontSize = 65,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Text = numbers[i].ToString()
+                });
+                if (input[i] == numbers[i])
+                {
+                    Result.Add(new Card() { Background = new SolidColorBrush(Colors.Green), Content = grid });
+                }
+                else
+                {
+                    Result.Add(new Card() { Background = new SolidColorBrush(Colors.Red), Content = grid });
+                }
             }
         });
         public ICommand ShowPictures => new DelegateCommand(o =>
         {
+            CreateTable(numbers.Count, numbers);
+        });
+        public ICommand CloseCards => new DelegateCommand(o =>
+        {
             Result.Clear();
             for (int i = 0; i < numbers.Count; i++)
-            {  
+            {
+                Result.Add(new Card());
+            }
+        });
+        public ICommand ShowNumbers => new DelegateCommand(o =>
+        {
+            Result.Clear();
+            AddCards();
+        });
+        public ICommand ShowTable => new DelegateCommand(o =>
+        {
+            var count = new Data().words.Length;
+            var list = Enumerable.Range(0, 100).ToList();
+            CreateTable(count, list);
+        });
+        //Срабатывает после того, как таймер отсчитает время
+        private void showTime(object obj, EventArgs e)
+        {
+            if (DateTime.Now - start >= new TimeSpan(0, 0, 0, seconds))
+            {
+                timer.Stop();
+                IsEnabledTextBox = true;
+                IsEnabledCheck = true;
+                Result.Clear();
+                for (int i = 0; i < numbers.Count; i++)
+                {
+                    Result.Add(new Card());
+                }
+            }
+            deltaTime = DateTime.Now - start;
+            Time = (DateTime.Now - start).ToString(@"hh\:mm\:ss");
+        }
+        private void AddCards()
+        {
+            for (int i = 0; i < numbers.Count; i++)
+            {
+                var grid = new Grid();
+                grid.Children.Add(new TextBlock()
+                {
+                    Foreground = new SolidColorBrush(Colors.Black),
+                    FontSize = 65,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Text = numbers[i].ToString()
+                });
+                Result.Add(new Card()
+                {
+                    Background = new SolidColorBrush(Colors.White),
+                    Content = grid,
+                });
+            }
+        }
+        private void CreateTable(int count, List<int> numbers)
+        {
+            Result.Clear();
+            for (int i = 0; i < count; i++)
+            {
                 BitmapImage bitmap = new BitmapImage();
                 bitmap.BeginInit();
-                bitmap.UriSource = new Uri($"Pictures/{numbers[i]}.jpg", UriKind.Relative);
+                bitmap.UriSource = new Uri($"Pictures/{numbers[i]}.jpg", UriKind.Relative);//индексы !!!!!
                 bitmap.EndInit();
 
                 var grid = new Grid();
@@ -183,22 +265,6 @@ namespace TrainMemory
 
                 Result.Add(new Card() { Content = grid });
             }
-        });
-        //Срабатывает после того, как таймер отсчитает время
-        private void showTime(object obj, EventArgs e)
-        {
-            if (DateTime.Now - start >= new TimeSpan(0, 0, 0, 10))
-            {
-                timer.Stop();
-                IsEnabledTextBox = true;
-                Result.Clear();
-                for (int i = 0; i < numbers.Count; i++)
-                {
-                    Result.Add(new Card());
-                }
-            }
-            deltaTime = DateTime.Now - start;
-            Time = (DateTime.Now - start).ToString(@"hh\:mm\:ss");
         }
         #region PropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;

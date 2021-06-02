@@ -58,5 +58,29 @@ namespace TrainMemory.Properties {
                 this["Finish"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int Seconds {
+            get {
+                return ((int)(this["Seconds"]));
+            }
+            set {
+                this["Seconds"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool IsChecked {
+            get {
+                return ((bool)(this["IsChecked"]));
+            }
+            set {
+                this["IsChecked"] = value;
+            }
+        }
     }
 }
