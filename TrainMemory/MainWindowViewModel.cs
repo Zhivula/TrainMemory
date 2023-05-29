@@ -104,6 +104,7 @@ namespace TrainMemory
             IsEnabledShowCards = true;
             IsEnabledCheck = true;
             Time = string.Empty;
+            start = DateTime.Now;
 
             AddCards();
 
@@ -112,7 +113,7 @@ namespace TrainMemory
                 IsEnabledTextBox = false;
                 IsEnabledShowCards = false;
                 IsEnabledCheck = false;
-                start = DateTime.Now;
+                
                 seconds = int.Parse(Properties.Settings.Default["Seconds"].ToString());
 
                 timer = new DispatcherTimer();
@@ -169,6 +170,10 @@ namespace TrainMemory
             for (int i = 0; i < numbers.Count; i++)
             {
                 Result.Add(new Card());
+            }
+            if (!bool.Parse(Properties.Settings.Default["IsChecked"].ToString()))
+            {
+                Time = (DateTime.Now - start).ToString(@"hh\:mm\:ss");
             }
         });
         public ICommand ShowNumbers => new DelegateCommand(o =>

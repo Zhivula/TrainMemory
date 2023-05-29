@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:TrainMemory"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-        Title="MainWindow" Height="500" Width="900">
+        Title="Zhivula Vladislav" Height="500" Width="900">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="70"/>
